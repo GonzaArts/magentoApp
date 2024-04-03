@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import styles from './SignInScreenStyles';
+import styles from './Styles/SignInScreenStyles';
 
 const signInValidationSchema = Yup.object().shape({
   username: Yup.string().required('Required'),

@@ -1,10 +1,12 @@
-import React from 'react';
-import { View, FlatList, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList, Dimensions, Text } from 'react-native';
 import Header from '../components/Dashboard/Header';
 import Card from '../components/Dashboard/Card';
 import OrderItem from '../components/Dashboard/OrderItem';
 import { LineChart } from 'react-native-chart-kit';
-import styles from './DashboardScreenStyles';
+import styles from './Styles/DashboardScreenStyles';
+import { Picker } from '@react-native-picker/picker';
+
 
 const DashboardScreen = () => {
   const chartData = {
@@ -39,19 +41,20 @@ const DashboardScreen = () => {
     <Card title={item.title} value={item.value} />
   );
 
+  const [filter, setFilter] = useState('7days');
+
   return (
     <View style={styles.dashboardContainer}>
       <FlatList
         ListHeaderComponent={
-          <>
-            <Header onMenuPress={() => {}} onSettingsPress={() => {}} />
+          <><>
+            <Header title="Dashboard" onMenuPress={() => { } } onSettingsPress={() => { } } />
             <FlatList
               data={cardData}
               renderItem={renderCard}
               keyExtractor={(item, index) => `card-${index}`}
               numColumns={2}
-              scrollEnabled={false}
-            />
+              scrollEnabled={false} />
             <LineChart
               data={chartData}
               width={Dimensions.get('window').width}
@@ -59,9 +62,21 @@ const DashboardScreen = () => {
               yAxisLabel="$"
               chartConfig={chartConfig}
               bezier
-              style={styles.chart}
-            />
+              style={styles.chart} />
           </>
+          <View style={styles.filterContainer}>
+        <Picker
+          selectedValue={filter}
+          style={styles.pickerStyle}
+          onValueChange={(itemValue, itemIndex) => setFilter(itemValue)}
+        >
+          <Picker.Item label="Últimos 7 días" value="7days" />
+          <Picker.Item label="Último mes" value="1month" />
+          <Picker.Item label="Últimos 3 meses" value="3months" />
+          <Picker.Item label="Últimos 6 meses" value="6months" />
+          <Picker.Item label="Último año" value="1year" />
+        </Picker>
+      </View><Text style={styles.OrderTitle}>Ultimas Ventas</Text></>
         }
         data={ordersData}
         keyExtractor={(item, index) => index.toString()}
