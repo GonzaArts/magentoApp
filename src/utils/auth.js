@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const API_URL = 'https://www.bluenty.com/index.php/rest/V1';
 
@@ -23,13 +24,15 @@ export const adminLogin = async (username, password) => {
     return token;
   } catch (error) {
     console.error('Error en admin login:', error);
+    Alert.alert('Error', 'Credenciales erróneas', [
+      { text: 'Reintentar', onPress: () => adminLogin(username, password) }
+    ]);
     throw error;
   }
 };
 
 //Extraer ganancias de pedidos de la API y almacenarlas en AsyncStorage
-export const getSales = async (fromDate, toDate) => {
-  const optionsForDay = { month: 'short', day: 'numeric' };
+export const getSales = async (fromDate, toDate, dateFormat) => {
 
   try {
     const token = await AsyncStorage.getItem('adminToken');
@@ -65,13 +68,14 @@ export const getSales = async (fromDate, toDate) => {
       totalShipping += order.shipping_amount;
       totalQuantity += order.total_qty_ordered;
 
-      const existingData = chartData.find(data => data.label === new Date(order.created_at).toLocaleDateString('es-ES', optionsForDay));
+      const labelFormat = new Date(order.created_at).toLocaleDateString('es-ES', dateFormat);
+      const existingData = chartData.find(data => data.label === labelFormat);
       if (existingData) {
         existingData.value += order.total_qty_ordered;
       } else {
         chartData.push({
           value: order.total_qty_ordered, // Cantidad total de cada orden para la altura de la barra
-          label: new Date(order.created_at).toLocaleDateString('es-ES', optionsForDay), // Fecha de la orden para la etiqueta
+          label: labelFormat, // Fecha de la orden para la etiqueta
         });
       }
     });
@@ -128,7 +132,7 @@ export const getNotifications = async () => {
 //Marcar como leída una notificación en la API y actualizar el estado local de dicha notificación
 export const markAsReadNotification = async notificationId => {
   try {
-    //Obtener token del usuario logado
+    //Obtener token del usuario logueado
     const userToken = await AsyncStorage.getItem('adminToken');
 
     //Buscar la notificación por su ID en el array de notificaciones locales
