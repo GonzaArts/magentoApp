@@ -13,11 +13,6 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  chart: {
-    marginVertical: 8,
-    borderRadius: 16,
-    backgroundColor: 'white',
-  },
   OrderTitle: {
     color: '#000',
     fontSize: 16,
@@ -31,6 +26,9 @@ export default StyleSheet.create({
   pickerStyle: {
     width: '100%',
     height: 50,
+    color: '#000',
+    borderWidth: 4,
+    borderColor: 'black',
   },
   modalBackground: {
     flex: 1,

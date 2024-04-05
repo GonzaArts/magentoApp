@@ -14,11 +14,9 @@ const DashboardScreen = () => {
 
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('7days');
-  const [chartData, setChartData] = useState({
-    labels: [], // Inicializa las etiquetas vacías
-    datasets: [{ data: [] }] // Inicializa el conjunto de datos vacío
-  });
+  const [filter, setFilter] = useState('currentYear');
+  const [chartData, setChartData] = useState([]);
+
 
   const getFilterDates = (filter) => {
     const now = new Date();
@@ -27,24 +25,24 @@ const DashboardScreen = () => {
   
     switch (filter) {
       case 'today':        
-        return { fromDate: startOfDay.toISOString(), toDate: endOfDay.toISOString(), format: 'HH:mm' };
+        return { fromDate: startOfDay.toISOString(), toDate: endOfDay.toISOString(), format: { hour: '2-digit', minute: '2-digit' } };
       case '24hours':
         const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
-        return { fromDate: yesterday.toISOString(), toDate: new Date().toISOString(), format: 'HH:mm' };
+        return { fromDate: yesterday.toISOString(), toDate: new Date().toISOString(), format: { hour: '2-digit', minute: '2-digit' } };
       case '7days':
         const lastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
-        return { fromDate: lastWeek.toISOString(), toDate: new Date().toISOString(), format: 'ddd DD' };
+        return { fromDate: lastWeek.toISOString(), toDate: new Date().toISOString(), format: { day: 'numeric', month: 'short' } };
       case 'currentMonth':
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        return { fromDate: startOfMonth.toISOString(), toDate: endOfMonth.toISOString(), format: 'ddd DD' };
+        return { fromDate: startOfMonth.toISOString(), toDate: endOfMonth.toISOString(), format: { day: 'numeric', month: 'short' } };
       case 'currentYear':
         const startOfYear = new Date(now.getFullYear(), 0, 1);
         const endOfYear = new Date(now.getFullYear(), 11, 31);
-        return { fromDate: startOfYear.toISOString(), toDate: endOfYear.toISOString(), format: 'YYYY' };
+        return { fromDate: startOfYear.toISOString(), toDate: endOfYear.toISOString(), format: { day: 'numeric', month: 'short' } };
       case 'from2Years':
         const twoYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 2));
-        return { fromDate: twoYearsAgo.toISOString(), toDate: new Date().toISOString(), format: 'YYYY' };
+        return { fromDate: twoYearsAgo.toISOString(), toDate: new Date().toISOString(), format: { month: 'short' } };
       default:
         return {};
     }
@@ -54,10 +52,11 @@ const DashboardScreen = () => {
     const loadCardData = async () => {
       setLoading(true);
       try {
-        const { fromDate, toDate } = getFilterDates(filter); // Usa la función getFilterDates para obtener las fechas
-        const { salesSummary, chartData } = await getSales(fromDate, toDate);
+        const { fromDate, toDate, format } = getFilterDates(filter); // Usa la función getFilterDates para obtener las fechas
+        const { salesSummary, chartData } = await getSales(fromDate, toDate, format);
       setCardData(salesSummary);
-      setChartData(chartData);
+      const dataLimit = chartData.slice(-7);
+      setChartData(dataLimit);
     } catch (error) {
       console.error("Error fetching card data:", error);
     } finally {
@@ -118,14 +117,35 @@ const DashboardScreen = () => {
               frontColor="#FFA000"
               width={Dimensions.get('window').width}
               height={220}
-              yAxisLabel="$"
+              xAxisLabelTextStyle={{color: '#000'}}
+              yAxisTextStyle={{color: '#000'}}
+              maxValue={20}
+              // yAxisLabelTexts={['0', '5', '10', '15', '20']}           
               bezier
-              style={styles.chart} />
+              style={styles.chart}
+              renderTooltip={(item, index) => (
+                <View
+                  style={{
+                    marginBottom: 15,
+                    backgroundColor: '#000',
+                    color: '#fff',
+                    marginLeft: 5,
+                    paddingHorizontal: 6,
+                    paddingVertical: 4,
+                    borderRadius: 4,
+                  }}>
+                  <Text>{item.value}</Text>
+                </View>
+              )}              
+              />
           </>
           <View style={styles.filterContainer}>
           <Picker
             selectedValue={filter}
             style={styles.pickerStyle}
+            itemStyle={{color: 'black'}}
+            dropdownIconColor={'black'}
+            selectionColor={'black'}
             onValueChange={(itemValue, itemIndex) => setFilter(itemValue)}
           >
             <Picker.Item label="Hoy" value="today" />
@@ -135,7 +155,8 @@ const DashboardScreen = () => {
             <Picker.Item label="Año actual" value="currentYear" />
             <Picker.Item label="Desde hace 2 años" value="from2Years" />
           </Picker>
-      </View><Text style={styles.OrderTitle}>Ultimas Ventas</Text></>
+      </View>
+      <Text style={styles.OrderTitle}>Ultimas Ventas</Text></>
         }
         data={ordersData}
         keyExtractor={(item, index) => index.toString()}
