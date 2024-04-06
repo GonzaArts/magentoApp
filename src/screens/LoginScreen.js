@@ -1,14 +1,16 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styles from './Styles/LoginScreenStyles';
 import { AuthContext } from '../context/AuthContext'; // Asumiendo que tienes un AuthContext
 import {Icon} from '@rneui/themed';
 
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
