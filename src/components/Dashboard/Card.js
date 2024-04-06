@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     width: cardWidth,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
+    elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
