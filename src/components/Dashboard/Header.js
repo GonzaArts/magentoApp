@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  // Añade más estilos según necesites
 });
 
 export default Header;
