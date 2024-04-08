@@ -1,7 +1,7 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 
-export default StyleSheet.create({
+const staticStyles = StyleSheet.create({
   dashboardContainer: {
     flex: 1,
     backgroundColor: '#fff',
@@ -60,3 +60,14 @@ export default StyleSheet.create({
   },
   // ...otros estilos que puedas necesitar...
 });
+
+const getDynamicStyles = (dimensions) => StyleSheet.create({
+  chart: {
+    width: dimensions.width,
+    height: 220,
+    // Añade aquí cualquier otro estilo dinámico que necesites
+  },
+  // Puedes agregar más estilos dinámicos si es necesario
+});
+
+export { staticStyles, getDynamicStyles };

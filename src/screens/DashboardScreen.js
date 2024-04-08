@@ -4,7 +4,7 @@ import Header from '../components/Dashboard/Header';
 import Card from '../components/Dashboard/Card';
 import OrderItem from '../components/Dashboard/OrderItem';
 import { BarChart } from "react-native-gifted-charts";
-import styles from './Styles/DashboardScreenStyles';
+import { staticStyles, getDynamicStyles } from './Styles/DashboardScreenStyles';
 import { Picker } from '@react-native-picker/picker';
 import { getSales } from '../utils/auth';
 import LoaderKit from 'react-native-loader-kit';
@@ -16,6 +16,8 @@ const DashboardScreen = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('currentYear');
   const [chartData, setChartData] = useState([]);
+  const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
+
 
 
   const getFilterDates = (filter) => {
@@ -39,7 +41,7 @@ const DashboardScreen = () => {
       case 'currentYear':
         const startOfYear = new Date(now.getFullYear(), 0, 1);
         const endOfYear = new Date(now.getFullYear(), 11, 31);
-        return { fromDate: startOfYear.toISOString(), toDate: endOfYear.toISOString(), format: { day: 'numeric', month: 'short' } };
+        return { fromDate: startOfYear.toISOString(), toDate: endOfYear.toISOString(), format: { month: 'short' } };
       case 'from2Years':
         const twoYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 2));
         return { fromDate: twoYearsAgo.toISOString(), toDate: new Date().toISOString(), format: { month: 'short' } };
@@ -71,6 +73,16 @@ const DashboardScreen = () => {
     <Card title={item.title} value={item.value} />
   );
 
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenDimensions(window);
+    });
+
+    return () => subscription.remove();
+  }, []);
+
+  const dynamicStyles = getDynamicStyles(screenDimensions);
+
   if (loading) {
     return (
       <Modal
@@ -78,15 +90,15 @@ const DashboardScreen = () => {
         animationType={'none'}
         visible={loading}
         onRequestClose={() => {console.log('close modal')}}>
-        <View style={styles.modalBackground}>
-          <View style={styles.activityIndicatorWrapper}>
+        <View style={staticStyles.modalBackground}>
+          <View style={staticStyles.activityIndicatorWrapper}>
             {/* Usando LoaderKit con el tipo LineScale */}
             <LoaderKit
               style={{ width: 50, height: 50 }}
               name={'LineScale'}
               color={'red'} // Cambia el color según tu preferencia
             />
-            <Text style={styles.loadingText}>Actualizando...</Text>
+            <Text style={staticStyles.loadingText}>Actualizando...</Text>
           </View>
         </View>
       </Modal>
@@ -99,8 +111,11 @@ const DashboardScreen = () => {
     { name: 'Test 1', items: 5, total: 113.00 },
   ];
 
+
+  
+
   return (
-    <View style={styles.dashboardContainer}>
+    <View style={staticStyles.dashboardContainer}>
       <FlatList
         ListHeaderComponent={
           <><>
@@ -115,21 +130,18 @@ const DashboardScreen = () => {
               data={chartData}
               isAnimated={true}
               frontColor="#FFA000"
-              width={Dimensions.get('window').width}
-              height={220}
               xAxisLabelTextStyle={{color: '#000'}}
               yAxisTextStyle={{color: '#000'}}
-              maxValue={20}
-              // yAxisLabelTexts={['0', '5', '10', '15', '20']}           
+              // maxValue={20}           
               bezier
-              style={styles.chart}
+              style={dynamicStyles.chart}
               renderTooltip={(item, index) => (
                 <View
                   style={{
-                    marginBottom: 15,
+                    marginBottom: 2,
                     backgroundColor: '#000',
                     color: '#fff',
-                    marginLeft: 5,
+                    marginLeft: 1,
                     paddingHorizontal: 6,
                     paddingVertical: 4,
                     borderRadius: 4,
@@ -139,10 +151,10 @@ const DashboardScreen = () => {
               )}              
               />
           </>
-          <View style={styles.filterContainer}>
+          <View style={staticStyles.filterContainer}>
           <Picker
             selectedValue={filter}
-            style={styles.pickerStyle}
+            style={staticStyles.pickerStyle}
             itemStyle={{color: 'black'}}
             dropdownIconColor={'black'}
             selectionColor={'black'}
@@ -156,7 +168,7 @@ const DashboardScreen = () => {
             <Picker.Item label="Desde hace 2 años" value="from2Years" />
           </Picker>
       </View>
-      <Text style={styles.OrderTitle}>Ultimas Ventas</Text></>
+      <Text style={staticStyles.OrderTitle}>Ultimas Ventas</Text></>
         }
         data={ordersData}
         keyExtractor={(item, index) => index.toString()}
