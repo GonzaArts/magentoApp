@@ -25,7 +25,12 @@ export const adminLogin = async (username, password) => {
   } catch (error) {
     console.error('Error en admin login:', error);
     Alert.alert('Error', 'Credenciales erróneas', [
-      { text: 'Reintentar', onPress: () => adminLogin(username, password) }
+      {
+        text: 'Reintentar',
+        onPress: () => {
+          AsyncStorage.removeItem('adminToken');
+        },
+      },
     ]);
     throw error;
   }
