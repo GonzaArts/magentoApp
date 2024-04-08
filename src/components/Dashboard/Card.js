@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import useDimensions from '../../hooks/useDimensions';  
 
-const windowWidth = Dimensions.get('window').width;
+
 const cardMargin = 10;
-const cardWidth = windowWidth / 2 - cardMargin * 2;
 
 const Card = ({ title, value }) => {
+  const { width } = useDimensions();
+  const cardWidth = width / 2 - cardMargin * 2;
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { width: cardWidth }]}>
       <Text style={styles.cardTitle}>{title}</Text>
       <Text style={styles.cardValue}>{value}</Text>
     </View>
@@ -20,7 +22,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 20,
     margin: cardMargin,
-    width: cardWidth,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,
