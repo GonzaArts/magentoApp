@@ -1,17 +1,22 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+
+const staticStyles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
     backgroundColor: '#fff', // Puedes cambiar el color de fondo si es necesario
   },
+  scrollView: {
+    flex: 1,
+    padding: 20,
+  },
+  
   welcomeBack: {
     fontSize: 25,
     fontWeight: 'bold',
     color: '#000', // Puedes cambiar los colores según tu diseño
     marginBottom: 10,
+    marginTop: 20,
   },
   introText: {
     fontSize: 16,
@@ -23,7 +28,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderColor: '#ddd',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
     paddingHorizontal: 15,
     marginBottom: 15,
   },
@@ -87,21 +92,27 @@ export default StyleSheet.create({
     shadowOpacity: 0.3,
     marginBottom: 15,
     },
-    showPasswordButtonText: {
+  showPasswordButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     },
-    logo: {
+  logo: {
     alignSelf: 'center',
     width: '100%',
-    aspectRatio: 1, // Maintain aspect ratio of the SVG
+    aspectRatio: 1, 
     marginBottom: 15,
     },
-    finalText: {
-      fontSize: 16,
-      color: '#666', // Este es un color gris, ajusta según tu diseño
-      marginTop: 20,
-      textAlign: 'center',
-    },
   });
+  const getDynamicStyles = (dimensions) => StyleSheet.create({
+    backgroundImage: {
+      width: dimensions.width, 
+      height: '30%', 
+      borderBottomLeftRadius: dimensions.width / 8.5,
+      borderBottomRightRadius: dimensions.width / 8.5,
+      
+    },
+    
+  });
+
+  export { staticStyles, getDynamicStyles };

@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from './Styles/LoginScreenStyles';
+import { staticStyles, getDynamicStyles } from './Styles/LoginScreenStyles';
 import { AuthContext } from '../context/AuthContext'; // Asumiendo que tienes un AuthContext
 import {Icon} from '@rneui/themed';
 
@@ -24,36 +24,53 @@ const LoginScreen = () => {
   };
 
   const [showPassword, setShowPassword] = useState(false);
+  const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
+  
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setScreenDimensions(window);
+    });
+
+    // Devuelve una función de limpieza que se llama al desmontar el componente
+    return () => subscription.remove();
+  }, []);
+
+  const dynamicStyles = getDynamicStyles(screenDimensions);
+
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-            {/* <Image source={require('../assets/logo.png')} style={{width: 380, height: 120, alignSelf: 'center'}} /> */}
-            <Text style={styles.welcomeBack}>Hola, ¡Bienvenido de nuevo! 👋</Text>
-            <Text style={styles.introText}>Empiece a gestionar su negocio de Magento con nosotros</Text>
+    <View style={staticStyles.container}>
+      <Image 
+            source={require('../assets/fondo.jpg')} 
+            style={dynamicStyles.backgroundImage} 
+            />
+      <ScrollView style={staticStyles.scrollView}>
+          
+            <Text style={staticStyles.welcomeBack}>Hola, ¡Bienvenido de nuevo! 👋</Text>
+            <Text style={staticStyles.introText}>Empiece a gestionar su negocio de Magento con nosotros</Text>
             <TextInput
               value={username}
               onChangeText={setUsername}
               placeholder="Usuario"
-              style={styles.inputUser}
+              defaultValue="test"
+              style={staticStyles.inputUser}
               keyboardType="default"
               autoCapitalize="none"
-              autoFocus
               placeholderTextColor={'#999'}
               selectionColor={'#FFA000'} // Color del cursor
             />
-            <View style={styles.inputContainer}>
+            <View style={staticStyles.inputContainer}>
             <TextInput
               value={password}
               onChangeText={setPassword}
               placeholder="Contraseña"
-              style={styles.input}
+              style={staticStyles.input}
               secureTextEntry={!showPassword}
               placeholderTextColor={'#999'} 
               selectionColor={'#FFA000'} // Color del cursor          
             /> 
             <TouchableOpacity
-            style={styles.toggleShowPassword}
+            style={staticStyles.toggleShowPassword}
             onPress={() => setShowPassword(!showPassword)}
           >
             <Icon 
@@ -65,14 +82,11 @@ const LoginScreen = () => {
           </TouchableOpacity>
           </View>   
             <TouchableOpacity onPress={() => {/* Navegar a la pantalla de recuperación de contraseña */}} >
-              <Text style={styles.forgotPasswordText}>¿Ha olvidado su contraseña?</Text>
+              <Text style={staticStyles.forgotPasswordText}>¿Ha olvidado su contraseña?</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
-              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+            <TouchableOpacity onPress={handleLogin} style={staticStyles.loginButton}>
+              <Text style={staticStyles.loginButtonText}>Iniciar Sesión</Text>
             </TouchableOpacity>
-            <Text style={styles.finalText}>
-              <Text style={{ fontWeight: 'bold' }}>Magento Mobile Admin</Text> es una plataforma de gestión open source para Magento. Adaptable y personalizable, lo que ves es solo el inicio. Únete, explora y adapta esta demo a tus necesidades de negocio.
-            </Text>
             </ScrollView>
           </View>
         );
