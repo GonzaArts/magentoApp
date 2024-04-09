@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Icon } from '@rneui/themed';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 const Header = ({ title }) => { // Removemos las props si no las usamos
   const navigation = useNavigation();
@@ -9,11 +10,11 @@ const Header = ({ title }) => { // Removemos las props si no las usamos
   return (
         <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Icon name="menu" size={24} color="#fff" />
+                <Ionicons name="menu" size={24} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>{title}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                <Icon name="notifications" size={24} color="#fff" />
+                <Ionicons name="notifications" size={24} color="#fff" />
             </TouchableOpacity>
         </View>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, Dimensions, Text, Modal } from 'react-native';
+import { View, FlatList, Dimensions, Text, Modal, ActivityIndicator } from 'react-native';
 import Header from '../components/Dashboard/Header';
 import Card from '../components/Dashboard/Card';
 import OrderItem from '../components/Dashboard/OrderItem';
@@ -7,14 +7,13 @@ import { BarChart } from "react-native-gifted-charts";
 import { staticStyles, getDynamicStyles } from './Styles/DashboardScreenStyles';
 import { Picker } from '@react-native-picker/picker';
 import { getSales } from '../utils/auth';
-import LoaderKit from 'react-native-loader-kit';
 
 
 const DashboardScreen = () => {
 
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('currentYear');
+  const [filter, setFilter] = useState('7days');
   const [chartData, setChartData] = useState([]);
   const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
 
@@ -92,12 +91,7 @@ const DashboardScreen = () => {
         onRequestClose={() => {console.log('close modal')}}>
         <View style={staticStyles.modalBackground}>
           <View style={staticStyles.activityIndicatorWrapper}>
-            {/* Usando LoaderKit con el tipo LineScale */}
-            <LoaderKit
-              style={{ width: 50, height: 50 }}
-              name={'LineScale'}
-              color={'red'} // Cambia el color según tu preferencia
-            />
+            <ActivityIndicator size="large" color="red" />
             <Text style={staticStyles.loadingText}>Actualizando...</Text>
           </View>
         </View>
@@ -139,8 +133,8 @@ const DashboardScreen = () => {
                 <View
                   style={{
                     marginBottom: 2,
-                    backgroundColor: '#000',
-                    color: '#fff',
+                    // backgroundColor: '#000',
+                    color: 'red',
                     marginLeft: 1,
                     paddingHorizontal: 6,
                     paddingVertical: 4,

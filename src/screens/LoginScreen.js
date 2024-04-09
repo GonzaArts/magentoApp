@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, Image, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, Dimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { staticStyles, getDynamicStyles } from './Styles/LoginScreenStyles';
 import { AuthContext } from '../context/AuthContext'; // Asumiendo que tienes un AuthContext
-import {Icon} from '@rneui/themed';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 
 const LoginScreen = () => {
@@ -41,7 +41,7 @@ const LoginScreen = () => {
   return (
     <View style={staticStyles.container}>
       <Image 
-            source={require('../assets/fondo.jpg')} 
+            source={require('../../assets/fondo.jpg')} 
             style={dynamicStyles.backgroundImage} 
             />
       <ScrollView style={staticStyles.scrollView}>
@@ -58,6 +58,7 @@ const LoginScreen = () => {
               autoCapitalize="none"
               placeholderTextColor={'#999'}
               selectionColor={'#FFA000'} // Color del cursor
+              autoCompleteType="username"
             />
             <View style={staticStyles.inputContainer}>
             <TextInput
@@ -67,16 +68,17 @@ const LoginScreen = () => {
               style={staticStyles.input}
               secureTextEntry={!showPassword}
               placeholderTextColor={'#999'} 
-              selectionColor={'#FFA000'} // Color del cursor          
+              selectionColor={'#FFA000'} // Color del cursor      
+              autoCompleteType="password"    
             /> 
             <TouchableOpacity
             style={staticStyles.toggleShowPassword}
             onPress={() => setShowPassword(!showPassword)}
           >
-            <Icon 
-              name={showPassword ? 'eye' : 'eye-slash'} // Cambia según el estado de showPassword
-              type='font-awesome' // Asegúrate de tener esta línea si usas @rneui/themed
-              color={showPassword ? '#000' : '#999'}               
+            <FontAwesome 
+              name={showPassword ? 'eye' : 'eye-slash'} 
+              type='font-awesome' 
+              color='#999'                
               size={24}
             />
           </TouchableOpacity>

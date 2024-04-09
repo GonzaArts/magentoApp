@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import {Icon} from '@rneui/themed'; // Asegúrate de tener este paquete o utiliza otro para el ícono
+import Ionicons from '@expo/vector-icons';
 
 
 const NotificationItem = ({ notification, onDelete }) => {
@@ -17,7 +17,7 @@ const NotificationItem = ({ notification, onDelete }) => {
         <Text style={styles.date}>{notification.date}</Text>
       </View>
       <TouchableOpacity onPress={() => onDelete(notification.id)} style={styles.actionButton}>
-        <Icon name="close" size={18} color="#fff" />
+        <Ionicons name="close" size={18} color="#fff" />
       </TouchableOpacity>
     </View>
   );
